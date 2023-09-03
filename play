@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# mu.sh does not inherently need this file and might be considered bloat to you, please feel free to delete it.
+
+player=mpv
+
+if [[ $1 ]]; then
+    option=$1
+else
+    option="all"
+fi
+
+function play {
+    echo "now playing $1"
+    $player --geometry=16%+0+0 --title="$1" --no-terminal "$1" &
+}
+
+function all {
+    if [[ $1 ]]; then
+        find ~/Music/* -iname "*$2*.mp3" -type f | shuf > ~/Music/mu.sh/default.m3u
+    else
+        find ~/Music/* -iname "*$2*.mp3" -type f > ~/Music/mu.sh/default.m3u
+    fi
+    play ~/Music/mu.sh/default.m3u
+}
+
+if [[ $option == "all" ]]; then
+    all false $2
+elif [[ $option == "shuffle" ]]; then
+    all true $2
+else
+    play $(echo "*$option*.mp3")
+fi
