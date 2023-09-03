@@ -1,0 +1,35 @@
+#!/bin/bash
+option=$1
+url=$2
+
+function download {
+	youtube-dl -q -f bestaudio[ext=mp3] -o "~/Music/%(title)s.mp3" --embed-thumbnail "$url"
+	local xfile=$(youtube-dl -o "~/Music/%(title)s.mp3" "$url" --get-filename)
+
+	if [[ $xfile != *" - "* ]]; then
+		youtube-dl -q -f "bestaudio[ext=mp3]" -o "~/Music/%(uploader)s - %(title)s.mp3" --embed-thumbnail "$url"
+		rm "$xfile"
+		xfile=$(youtube-dl -o "~/Music/%(uploader)s - %(title)s.mp3" "$url" --get-filename)
+	fi
+
+	file=$xfile
+}
+
+function strip {
+	local x="${file//.mp3/}"; local x="${x//\/home\/$USER\/Music\//}"
+	artist="${x% - *}"; title="${x#* - }"
+}
+
+function setinfo {
+	youtube-dl -q -o "$file" "$url" --add-metadata --postprocessor-args "-metadata title='$title' -metadata artist='$artist'"
+}
+
+if [[ $option == "url" ]]; then
+	echo "downloading $url"
+	download; strip; setinfo
+elif [[ $option == "list" ]]; then
+	for url in $(cat $url); do
+		echo "downloading $url"
+		download; strip; setinfo
+	done
+fi
