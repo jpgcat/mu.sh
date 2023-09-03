@@ -1,5 +1,5 @@
 # mu.sh
-**Music Shell (mu.sh) - Simplified Music Managing Bash Script**
+**Music Shell (mu.sh) - Simplified Music Managing Bash Script (for Linux)**
 
 A simple but functional bash script designed to manage your music properly using youtube-dl. mu.sh effectively acts as a youtube-dl config, handling how your music is downloaded, applying an easy to use naming convention, correct metadata tags, and art covers in one simple command.
 
